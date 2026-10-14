@@ -1,0 +1,45 @@
+# Native Inspect model price overrides (USD per 1M tokens).
+# Purpose: Inspect's bundled model database ships no prices for these models,
+# so without this file cost tracking is $0 and --cost-limit cannot be enforced.
+# Prices verified 2026-10-11 from provider pricing pages; see reports/02-smoke-test.md.
+# Format consumed by: inspect eval --model-cost-config <this file>
+#
+# Caveats:
+#  - USD, standard short-context tier only.
+#  - deepseek-flash is off-peak; DeepSeek peak rates (01-04, 06-10 UTC Mon-Fri) are 2x.
+#  - gpt-5.6-luna long-context tier (>272K input) is 2x input / 1.5x output (not reached here).
+#  - Mistral Large 3: keyed by the PINNED snapshot id mistral/mistral-large-2512 because
+#    Inspect's model DB has no entry for the `mistral-large-latest` alias, which makes
+#    set_model_cost() fail and --cost-limit unusable. The alias resolves to this snapshot
+#    (verified via GET https://api.mistral.ai/v1/models/mistral-large-latest on 2026-10-11).
+
+deepseek/deepseek-flash:
+  input: 0.15
+  output: 0.60
+  input_cache_write: 0.15
+  input_cache_read: 0.003
+
+openai/gpt-5.6-luna:
+  input: 0.20
+  output: 1.20
+  input_cache_write: 0.25
+  input_cache_read: 0.02
+
+google/gemini-3.5-flash-lite:
+  input: 0.30
+  output: 2.50
+  input_cache_write: 0.083
+  input_cache_read: 0.03
+
+anthropic/claude-haiku-5-5:
+  input: 0.10
+  output: 0.50
+  input_cache_write: 0.125
+  input_cache_read: 0.01
+
+# Mistral Large 3 = snapshot mistral-large-2512 (what `mistral/mistral-large-latest` resolves to).
+mistral/mistral-large-2512:
+  input: 0.50
+  output: 1.50
+  input_cache_write: 0.50
+  input_cache_read: 0.05

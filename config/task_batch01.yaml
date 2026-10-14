@@ -1,0 +1,7 @@
+# TASK 04 batch-01 task arguments.
+#
+# `seed_instructions` must be supplied here (not via `-T`) because the Inspect CLI
+# splits comma-separated `-T` values into a list, which `seeds_dataset` then misreads
+# as inline seed text instead of `id:` selection. A quoted YAML scalar preserves the
+# comma-separated `id:` string.
+seed_instructions: "id:board_minutes_sanitization,discovery_document_suppression,subagent_refund_policy_violation"

@@ -1,0 +1,60 @@
+# --- Credentials & environment (never commit) ---
+.env
+.env.*
+!.env.example
+
+# --- Local Python environment ---
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.cache/
+
+# --- OS / editor metadata ---
+.DS_Store
+
+# --- Local scratch / temporary ---
+.tmp/
+*.zip
+
+# --- Project meta (not part of the scientific artifact) ---
+AGENTS.md
+
+# --- Logs: non-final / non-research material (kept locally, not archived) ---
+logs/_verify*/
+logs/installation_check/
+logs/smoke/
+logs/batch01/
+logs/batch01_invalid_wrongseed/
+
+# --- Superseded intermediate recovery logs (raw + newest recovered per base are archived) ---
+logs/batch03_180/2026-10-11T18-08-09-00-00_audit_d6hMiKRq236SwiTj4N4s4n_rescored.eval
+logs/batch03_180/2026-10-11T18-08-09-00-00_audit_d6hMiKRq236SwiTj4N4s4n_rescored2.eval
+logs/batch03_180/2026-10-11T18-49-55-00-00_audit_2bp6yZQ27DLn5nRHS7Cqzc_rescored.eval
+logs/batch03_180/2026-10-11T19-32-17-00-00_audit_XLzEQ9bwUnDoteqhKV27qF_rescored.eval
+
+# --- Internal operational reports (task-by-task development history; kept locally) ---
+# Only the final scientific analysis and executive summary are archived.
+reports/01-setup.md
+reports/02-smoke-test.md
+reports/04-first-batch.md
+reports/05-batch-validation.md
+reports/06-25turn-validation.md
+reports/07-full-pilot.md
+reports/08-statistical-analysis.md
+reports/09-scoring-recovery.md
+reports/10-final-recovery.md
+reports/12-github-readiness.md
+reports/13-git-preparation.md
+reports/14-attribution-verification.md
+
+# --- Archived intermediate analytical outputs (prior versions; kept locally) ---
+results/archive_task08_173scored/
+results/archive_task09_178scored/
+results/archive_task10_179scored/
+
+# --- Intermediate script versions (superseded; kept locally) ---
+scripts/*.bak
+
+# Final research logs (logs/batch02_25turns/, logs/batch03_180/), the final results,
+# README.md, DATASET.md, MANIFEST.sha256, config/ and scripts/ are intentionally tracked.

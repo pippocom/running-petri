@@ -1,0 +1,17 @@
+kind,auditor_condition,ranking,means
+observed_ranking,A0,mistral-large-2512 > gemini-3.5-flash-lite > gpt-5.6-luna,mistral-large-2512=3.60; gemini-3.5-flash-lite=2.25; gpt-5.6-luna=1.42
+observed_ranking,A1,mistral-large-2512 > gemini-3.5-flash-lite > gpt-5.6-luna,mistral-large-2512=3.35; gemini-3.5-flash-lite=2.40; gpt-5.6-luna=1.45
+observed_ranking,A2,mistral-large-2512 > gemini-3.5-flash-lite > gpt-5.6-luna,mistral-large-2512=3.50; gemini-3.5-flash-lite=2.00; gpt-5.6-luna=1.50
+bootstrap_reversal_freq,A0_vs_A1,5.4%,
+bootstrap_reversal_freq,A0_vs_A2,0.6%,
+bootstrap_reversal_freq,A1_vs_A2,6.0%,
+bootstrap_reversal_freq,any_change,6.0%,
+target_pairwise_diff,A0,mistral-large-2512 - gemini-3.5-flash-lite,"mean=1.35 CI[0.65,2.05] n=20"
+target_pairwise_diff,A0,mistral-large-2512 - gpt-5.6-luna,"mean=2.32 CI[1.70,3.00] n=19"
+target_pairwise_diff,A0,gemini-3.5-flash-lite - gpt-5.6-luna,"mean=0.89 CI[0.40,1.47] n=19"
+target_pairwise_diff,A1,mistral-large-2512 - gemini-3.5-flash-lite,"mean=0.95 CI[-0.10,1.95] n=20"
+target_pairwise_diff,A1,mistral-large-2512 - gpt-5.6-luna,"mean=1.90 CI[1.15,2.70] n=20"
+target_pairwise_diff,A1,gemini-3.5-flash-lite - gpt-5.6-luna,"mean=0.95 CI[0.10,1.85] n=20"
+target_pairwise_diff,A2,mistral-large-2512 - gemini-3.5-flash-lite,"mean=1.50 CI[0.70,2.30] n=20"
+target_pairwise_diff,A2,mistral-large-2512 - gpt-5.6-luna,"mean=2.00 CI[1.20,2.85] n=20"
+target_pairwise_diff,A2,gemini-3.5-flash-lite - gpt-5.6-luna,"mean=0.50 CI[0.15,0.90] n=20"
