@@ -8,7 +8,7 @@ A feasibility pilot on how much **AI safety evaluation outcomes depend on the ov
 
 **Research author:** **Marco Iannacone** ([ORCID 0009-0008-4219-6351](https://orcid.org/0009-0008-4219-6351)) designed and executed the pilot and authored this repository's configuration, analysis and documentation.
 
-**Framework attribution:** The evaluation framework used here is [Petri](https://github.com/meridianlabs-ai/inspect_petri), created and maintained by **Meridian Labs** and built on [Inspect AI](https://inspect.aisi.org.uk/) (UK AI Security Institute). Petri and Inspect AI are external dependencies used unmodified; authorship of the framework belongs to Meridian Labs and the respective upstream authors. This repository contains only the pilot's own configuration, analysis and documentation.
+**Framework attribution:** The evaluation framework used here is [Petri](https://github.com/meridianlabs-ai/inspect_petri), created and maintained by **Meridian Labs** and built on [Inspect AI](https://inspect.aisi.org.uk/) (UK AI Security Institute). Petri and Inspect AI are external dependencies used unmodified; authorship of the framework belongs to Meridian Labs and the respective upstream authors. This repository contains the pilot's own configuration, analysis code, derived results, dataset, raw `.eval` logs and documentation.
 
 ---
 
@@ -22,7 +22,9 @@ Automated safety evaluations increasingly use an LLM "auditor" to probe a target
 
 ## Methodology
 
-**Why Petri.** We used Petri rather than building a purpose-specific harness to reduce dependence on custom evaluation infrastructure: scenario construction, tool synthesis, audit execution, native `.eval` logging and judge scoring are provided and maintained upstream. This is *not* an independent validation of any specific proposed framework (e.g. PROBUS or SLEF).
+**Why Petri.** We used Petri rather than building a purpose-specific harness to reduce dependence on custom evaluation infrastructure: scenario construction, tool synthesis, audit execution, native `.eval` logging and judge scoring are provided and maintained upstream.
+
+**Relation to the proposed PROBUS research.** This pilot was run as a feasibility study for the proposed MATS/PROBUS work. It tests whether auditor strategy can be manipulated and measured in a Petri-based design, and it identifies design changes needed for a stronger study — notably fixing scenario construction independently of the auditor and adding independent behavioural verification. It is *not* an independent validation of PROBUS or SLEF, and it does not confirm any PROBUS-specific hypothesis.
 
 **Design (paired).** 3 auditor conditions × 3 target models × the same 20 scenarios (seeds) = 180 audits, one epoch each.
 
@@ -50,6 +52,7 @@ Automated safety evaluations increasingly use an LLM "auditor" to probe a target
 
 - **Target identity was associated with substantially larger differences than auditor strategy.** Target gaps were ≈ 0.5–2.3 points; the overall auditor contrasts were ≈ 0.02–0.08 points with 95% CIs all spanning zero.
 - **No consistent average auditor-strategy effect was detectable** (A1−A0 = −0.02 [−0.35, 0.32]; A2−A0 = −0.08 [−0.42, 0.27]; A2−A1 = −0.07 [−0.50, 0.38]).
+- **The auditor-context manipulations did not produce statistically significant differences.** All three overall 95% confidence intervals included zero. This is not evidence that auditor strategy has no effect; the pilot is exploratory and underpowered for small effects (see [Limitations](#limitations)).
 - **Per-seed differences were heterogeneous** (range ≈ ±5 in places) with positive and negative effects cancelling in aggregate.
 - **The observed target ranking (Mistral > Gemini > GPT) was unchanged across all three auditor conditions** (bootstrap ranking-reversal frequencies 0.6–6.0%).
 - The study is **exploratory** and does not establish causal effects or model-safety rankings.
@@ -96,7 +99,7 @@ shasum -a 256 -c MANIFEST.sha256
 .venv/bin/python scripts/08_analysis.py
 ```
 
-This rebuilds `results/petri_180.csv` (one row per `(seed, auditor_condition, target)`), the means/paired/ranking/sensitivity tables, and `results/08-auditor-effects.png`, using the frozen logs and the fixed bootstrap seed. No API keys or network access are required.
+This rebuilds `results/petri_180.csv` (one row per `(seed, auditor_condition, target)`), the means/paired/ranking/sensitivity tables, the per-seed differences table (`results/08-per-seed-differences.csv`), and `results/08-auditor-effects.png`, using the frozen logs and the fixed bootstrap seed. The per-seed table uses complete observed pairs only: 178 pairs in total (A1−A0 = 59, A2−A0 = 59, A2−A1 = 60), with the single missing score excluded rather than imputed. No API keys or network access are required.
 
 ### 5. Reproduce the bootstrap analysis
 
@@ -136,4 +139,8 @@ MANIFEST.sha256 checksums of archived research logs, dataset and analysis script
 
 ## Licensing
 
-No license is applied yet; the licensing decision is pending. Petri and Inspect AI are MIT-licensed and are used as dependencies, not vendored. The `.eval` logs embed upstream seed instructions (with canary strings) and third-party model outputs; redistribution terms for those contents have **not** been asserted.
+**Upstream framework.** Petri and Inspect AI are MIT-licensed and are used as external dependencies, not vendored. Their licenses cover the upstream framework and its built-in seed templates; they do **not** automatically establish a license for the pilot's original research materials.
+
+**Original research materials.** The pilot's configuration, analysis code, dataset, reports, figures and documentation are original research materials. No license is currently applied to them; the licensing decision is pending. Making this repository public does not by itself grant reuse rights beyond GitHub's Terms of Service.
+
+**Logs and model outputs.** The `.eval` logs contain the pilot's transcripts, upstream seed instructions (including canary strings), and outputs generated by third-party models. They are included as the research record. No separate third-party asset requiring permission was identified in this repository, but the author does not assert a separate license over third-party model outputs or upstream seed text.

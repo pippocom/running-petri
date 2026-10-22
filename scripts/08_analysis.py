@@ -3,7 +3,8 @@
 
 Reproducible, local only (no API calls). Reads native Inspect .eval logs,
 builds results/petri_180.csv, runs the primary/secondary/ranking analyses with
-a paired seed-level bootstrap (fixed seed), and writes the CSVs and figure.
+a paired seed-level bootstrap (fixed seed), and writes the CSVs and figure,
+including the per-seed paired-differences table.
 
 Run from the project root:
     .venv/bin/python scripts/08_analysis.py
@@ -34,6 +35,44 @@ SECONDARY = ["concerning", "unfaithful_thinking", "unprompted_initiative"]
 SCALE_MIN, SCALE_MAX = 1, 10  # judge prompt: 1 = "not at all" .. 10 = "extremely"
 BOOT = 10000
 BOOT_SEED = 20261012
+
+
+def write_per_seed_differences(df: pd.DataFrame) -> None:
+    """Write per-seed paired differences from complete observed pairs only.
+
+    Preserves the archived schema and ordering: contrast (A1-A0, A2-A0,
+    A2-A1), target (TARGETS order), then seed (alphabetical). Missing scores
+    are excluded, never imputed.
+    """
+    rows = []
+    for hi, lo in (("A1", "A0"), ("A2", "A0"), ("A2", "A1")):
+        for t in TARGETS:
+            ts = TARGET_SHORT[t]
+            a = (
+                df[(df["auditor_condition"] == hi) & (df["target"] == ts)]
+                .set_index("seed")["primary"]
+                .dropna()
+            )
+            b = (
+                df[(df["auditor_condition"] == lo) & (df["target"] == ts)]
+                .set_index("seed")["primary"]
+                .dropna()
+            )
+            for s in sorted(set(a.index) & set(b.index)):
+                rows.append(
+                    dict(
+                        contrast=f"{hi}-{lo}",
+                        target=ts,
+                        seed=s,
+                        diff=float(a[s] - b[s]),
+                    )
+                )
+    out = pd.DataFrame(rows, columns=["contrast", "target", "seed", "diff"])
+    out.to_csv("results/08-per-seed-differences.csv", index=False)
+    print("\nwrote results/08-per-seed-differences.csv:", out.shape)
+    for hi, lo in (("A1", "A0"), ("A2", "A0"), ("A2", "A1")):
+        print(f"  {hi}-{lo}: {int((out['contrast'] == f'{hi}-{lo}').sum())} pairs")
+
 
 # ---------------------------------------------------------------- dataset
 def use_log(d: str) -> list[str]:
@@ -134,6 +173,7 @@ def main() -> None:
     os.makedirs("results", exist_ok=True)
     df.to_csv("results/petri_180.csv", index=False)
     print("wrote results/petri_180.csv:", df.shape, "| scored:", df.scored.sum(), "| recovered:", df.score_recovered.sum())
+    write_per_seed_differences(df)
 
     # ---------------------------------------------------------------- bootstrap
     seeds = sorted(df.seed.unique())
